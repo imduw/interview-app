@@ -68,7 +68,10 @@ class _MyAppState extends State<MyApp> {
       });
       await _save();
       if (!hasAppsScriptEndpoint) {
-        _showMessage('Đã lưu trên thiết bị. Cấu hình URL Apps Script để đồng bộ lên Google Sheets.');
+        _showMessage('Đã lưu trên thiết bị. Cấu hình URL Apps Script để đồng bộ lên Google Sheets. (endpoint: $kAppsScriptEndpoint)');
+        // also print to console for debugging
+        // ignore: avoid_print
+        print('Debug: kAppsScriptEndpoint="$kAppsScriptEndpoint"');
         return;
       }
       final connectivity = await _connectivityService.check();
@@ -92,7 +95,9 @@ class _MyAppState extends State<MyApp> {
         });
         await _save();
         if (!hasAppsScriptEndpoint) {
-          _showMessage('Đã lưu trên thiết bị. Cấu hình URL Apps Script để đồng bộ lên Google Sheets.');
+          _showMessage('Đã lưu trên thiết bị. Cấu hình URL Apps Script để đồng bộ lên Google Sheets. (endpoint: $kAppsScriptEndpoint)');
+          // ignore: avoid_print
+          print('Debug: kAppsScriptEndpoint="$kAppsScriptEndpoint"');
           return;
         }
         final connectivity = await _connectivityService.check();
@@ -152,7 +157,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _attemptSyncPending() async {
-    if (!hasAppsScriptEndpoint) return;
+    if (!hasAppsScriptEndpoint) {
+      _showMessage('Chưa cấu hình Apps Script endpoint. ($kAppsScriptEndpoint)');
+      // ignore: avoid_print
+      print('Debug: kAppsScriptEndpoint="$kAppsScriptEndpoint"');
+      return;
+    }
     final connectivity = await _connectivityService.check();
     if (connectivity == conn.ConnectivityResult.none) {
       _showMessage('Mạng hiện đang offline. Các phiên chưa đồng bộ sẽ tự sync khi có kết nối.');
