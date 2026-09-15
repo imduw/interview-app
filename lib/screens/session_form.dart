@@ -155,61 +155,64 @@ class _SessionFormState extends State<SessionForm> {
             key: _formKey,
             child: ListView(
               children: [
-                Container(
-                  padding: const EdgeInsets.all(18),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(22),
-                    gradient: LinearGradient(
-                      colors: [Colors.indigo.shade600, Colors.blue.shade500],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                  Container(
+                    padding: const EdgeInsets.all(18),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(22),
+                      gradient: LinearGradient(
+                        colors: [Colors.indigo.shade600, Colors.blue.shade500],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Icon(Icons.edit_note_rounded, color: Colors.white, size: 30),
+                        const SizedBox(height: 10),
+                        Text(
+                          widget.session == null ? 'Tạo phiên phỏng vấn mới' : 'Cập nhật phiên phỏng vấn',
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Icon(Icons.edit_note_rounded, color: Colors.white, size: 30),
-                      const SizedBox(height: 10),
-                      Text(
-                        widget.session == null ? 'Tạo phiên phỏng vấn mới' : 'Cập nhật phiên phỏng vấn',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
+                  const SizedBox(height: 18),
+                  _buildSectionTitle(context, 'Thông tin cơ bản'),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: _sessionController,
+                    autofillHints: const [AutofillHints.organizationName],
+                    decoration: const InputDecoration(
+                      labelText: 'Tên phiên phỏng vấn',
+                      prefixIcon: Icon(Icons.title),
+                    ),
+                    validator: (v) => (v == null || v.trim().isEmpty) ? 'Vui lòng nhập tên phiên' : null,
                   ),
-                ),
-                const SizedBox(height: 18),
-                _buildSectionTitle(context, 'Thông tin cơ bản'),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: _sessionController,
-                  decoration: const InputDecoration(
-                    labelText: 'Tên phiên phỏng vấn',
-                    prefixIcon: Icon(Icons.title),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _interviewerController,
+                    autofillHints: const [AutofillHints.name],
+                    decoration: const InputDecoration(
+                      labelText: 'Tên người phỏng vấn',
+                      prefixIcon: Icon(Icons.person),
+                    ),
+                    validator: (v) => (v == null || v.trim().isEmpty) ? 'Vui lòng nhập tên người phỏng vấn' : null,
                   ),
-                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Vui lòng nhập tên phiên' : null,
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _interviewerController,
-                  decoration: const InputDecoration(
-                    labelText: 'Tên người phỏng vấn',
-                    prefixIcon: Icon(Icons.person),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _intervieweeController,
+                    autofillHints: const [AutofillHints.name],
+                    decoration: const InputDecoration(
+                      labelText: 'Tên người được phỏng vấn',
+                      prefixIcon: Icon(Icons.person_outline),
+                    ),
+                    validator: (v) => (v == null || v.trim().isEmpty) ? 'Vui lòng nhập tên người được phỏng vấn' : null,
                   ),
-                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Vui lòng nhập tên người phỏng vấn' : null,
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _intervieweeController,
-                  decoration: const InputDecoration(
-                    labelText: 'Tên người được phỏng vấn',
-                    prefixIcon: Icon(Icons.person_outline),
-                  ),
-                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Vui lòng nhập tên người được phỏng vấn' : null,
-                ),
-                const SizedBox(height: 18),
+                  const SizedBox(height: 18),
                 _buildSectionTitle(context, 'Thời gian & địa điểm'),
                 const SizedBox(height: 10),
                 Row(
