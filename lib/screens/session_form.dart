@@ -137,134 +137,227 @@ class _SessionFormState extends State<SessionForm> {
   @override
   Widget build(BuildContext context) {
     final dateText = _selectedDate == null
-        ? 'Select date'
+        ? 'Chọn ngày'
         : '${_selectedDate!.year}-${_selectedDate!.month.toString().padLeft(2, '0')}-${_selectedDate!.day.toString().padLeft(2, '0')}';
     final timeText = _selectedTime == null
-        ? 'Select time'
+        ? 'Chọn giờ'
         : _selectedTime!.format(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.session == null ? 'New Interview Session' : 'Edit Interview')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              TextFormField(
-                controller: _sessionController,
-                decoration: const InputDecoration(labelText: 'Session name'),
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Enter session name' : null,
-              ),
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: _interviewerController,
-                decoration: const InputDecoration(labelText: 'Interviewer name'),
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Enter interviewer name' : null,
-              ),
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: _intervieweeController,
-                decoration: const InputDecoration(labelText: 'Interviewee name'),
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Enter interviewee name' : null,
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => _pickDate(context),
-                      child: Text(dateText),
+      appBar: AppBar(
+        title: Text(widget.session == null ? 'Tạo phiên' : 'Chỉnh sửa'),
+        centerTitle: false,
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(22),
+                    gradient: LinearGradient(
+                      colors: [Colors.indigo.shade600, Colors.blue.shade500],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => _pickTime(context),
-                      child: Text(timeText),
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Icon(Icons.edit_note_rounded, color: Colors.white, size: 30),
+                      const SizedBox(height: 10),
+                      Text(
+                        widget.session == null ? 'Tạo phiên phỏng vấn mới' : 'Cập nhật phiên phỏng vấn',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: _getLocation,
-                    icon: const Icon(Icons.location_on),
-                    label: const Text('Lấy vị trí'),
-                  ),
-                  const SizedBox(width: 12),
-                  if (_latitude != null && _longitude != null) Expanded(child: Text('Lat: ${_latitude!.toStringAsFixed(5)}, Lon: ${_longitude!.toStringAsFixed(5)}')),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () => _pickImage(ImageSource.camera),
-                    icon: const Icon(Icons.camera_alt),
-                    label: const Text('Chụp ảnh'),
-                  ),
-                  const SizedBox(width: 12),
-                  ElevatedButton.icon(
-                    onPressed: () => _pickImage(ImageSource.gallery),
-                    icon: const Icon(Icons.photo),
-                    label: const Text('Chọn ảnh'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              if (_photoBase64 != null)
-                Image.memory(
-                  base64Decode(_photoBase64!),
-                  height: 180,
-                  fit: BoxFit.cover,
                 ),
-              const SizedBox(height: 12),
-              const Text('Questions', style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              ..._questions.asMap().entries.map((entry) {
-                final idx = entry.key;
-                final q = entry.value;
-                return Column(
+                const SizedBox(height: 18),
+                _buildSectionTitle(context, 'Thông tin cơ bản'),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: _sessionController,
+                  decoration: const InputDecoration(
+                    labelText: 'Tên phiên phỏng vấn',
+                    prefixIcon: Icon(Icons.title),
+                  ),
+                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Vui lòng nhập tên phiên' : null,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _interviewerController,
+                  decoration: const InputDecoration(
+                    labelText: 'Tên người phỏng vấn',
+                    prefixIcon: Icon(Icons.person),
+                  ),
+                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Vui lòng nhập tên người phỏng vấn' : null,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _intervieweeController,
+                  decoration: const InputDecoration(
+                    labelText: 'Tên người được phỏng vấn',
+                    prefixIcon: Icon(Icons.person_outline),
+                  ),
+                  validator: (v) => (v == null || v.trim().isEmpty) ? 'Vui lòng nhập tên người được phỏng vấn' : null,
+                ),
+                const SizedBox(height: 18),
+                _buildSectionTitle(context, 'Thời gian & địa điểm'),
+                const SizedBox(height: 10),
+                Row(
                   children: [
-                    TextFormField(
-                      initialValue: q.question,
-                      decoration: InputDecoration(labelText: 'Question ${idx + 1}'),
-                      onChanged: (v) => q.question = v,
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => _pickDate(context),
+                        icon: const Icon(Icons.calendar_month),
+                        label: Text(dateText),
+                      ),
                     ),
-                    TextFormField(
-                      initialValue: q.answer,
-                      decoration: InputDecoration(labelText: 'Answer ${idx + 1}'),
-                      onChanged: (v) => q.answer = v,
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => _pickTime(context),
+                        icon: const Icon(Icons.access_time),
+                        label: Text(timeText),
+                      ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Card(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Row(
                       children: [
-                        TextButton(
-                          onPressed: () => _removeQuestion(idx),
-                          child: const Text('Remove'),
-                        )
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: _getLocation,
+                            icon: const Icon(Icons.location_on),
+                            label: const Text('Lấy vị trí'),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        if (_latitude != null && _longitude != null)
+                          Expanded(
+                            child: Text(
+                              'Lat: ${_latitude!.toStringAsFixed(5)}\nLon: ${_longitude!.toStringAsFixed(5)}',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ),
                       ],
                     ),
-                    const Divider(),
+                  ),
+                ),
+                const SizedBox(height: 18),
+                _buildSectionTitle(context, 'Ảnh & minh chứng'),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => _pickImage(ImageSource.camera),
+                        icon: const Icon(Icons.camera_alt),
+                        label: const Text('Chụp ảnh'),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => _pickImage(ImageSource.gallery),
+                        icon: const Icon(Icons.photo_library),
+                        label: const Text('Chọn ảnh'),
+                      ),
+                    ),
                   ],
-                );
-              }),
-              TextButton.icon(
-                onPressed: _addQuestion,
-                icon: const Icon(Icons.add),
-                label: const Text('Add question'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _save,
-                child: const Text('Save'),
-              ),
-            ],
+                ),
+                const SizedBox(height: 12),
+                if (_photoBase64 != null)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(18),
+                    child: Image.memory(
+                      base64Decode(_photoBase64!),
+                      height: 200,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                const SizedBox(height: 18),
+                _buildSectionTitle(context, 'Câu hỏi & câu trả lời'),
+                const SizedBox(height: 10),
+                ..._questions.asMap().entries.map((entry) {
+                  final idx = entry.key;
+                  final q = entry.value;
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text('Câu ${idx + 1}', style: const TextStyle(fontWeight: FontWeight.w700)),
+                              const Spacer(),
+                              TextButton.icon(
+                                onPressed: () => _removeQuestion(idx),
+                                icon: const Icon(Icons.delete_outline),
+                                label: const Text('Xóa'),
+                              ),
+                            ],
+                          ),
+                          TextFormField(
+                            initialValue: q.question,
+                            decoration: InputDecoration(
+                              labelText: 'Câu hỏi',
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                            onChanged: (v) => q.question = v,
+                          ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            initialValue: q.answer,
+                            decoration: InputDecoration(
+                              labelText: 'Câu trả lời',
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                            onChanged: (v) => q.answer = v,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+                OutlinedButton.icon(
+                  onPressed: _addQuestion,
+                  icon: const Icon(Icons.add_circle_outline),
+                  label: const Text('Thêm câu hỏi'),
+                ),
+                const SizedBox(height: 20),
+                FilledButton.icon(
+                  onPressed: _save,
+                  icon: const Icon(Icons.save),
+                  label: const Text('Lưu phiên'),
+                ),
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(BuildContext context, String title) {
+    return Text(
+      title,
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+        fontWeight: FontWeight.w800,
       ),
     );
   }

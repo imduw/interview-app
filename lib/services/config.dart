@@ -1,4 +1,9 @@
-// Put your Google Apps Script Web App URL here after deployment.
-// Example: const kAppsScriptEndpoint = 'https://script.google.com/macros/s/XXXX/exec';
-// Do NOT commit secret keys into source code. This URL is public endpoint for demo.
-const String kAppsScriptEndpoint = '<YOUR_APPS_SCRIPT_WEB_APP_URL_HERE>';
+// Default endpoint: proxy path on the same Vercel deployment.
+// After you add api/proxy.js and set APPS_SCRIPT_URL on Vercel, leave this as '/api/proxy'.
+// If you prefer to call Apps Script directly, replace with full Apps Script URL.
+const String kAppsScriptEndpoint = '/api/proxy';
+
+bool get hasAppsScriptEndpoint =>
+    kAppsScriptEndpoint.trim().isNotEmpty &&
+    !kAppsScriptEndpoint.contains('<YOUR') &&
+    !kAppsScriptEndpoint.contains('YOUR_');

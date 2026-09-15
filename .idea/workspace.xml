@@ -7,7 +7,22 @@
     <option name="selectedModelId" value="auto" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9618da03-148a-45f8-b23f-7f6b60d8cf54" name="Changes" comment="m1" />
+    <list default="true" id="9618da03-148a-45f8-b23f-7f6b60d8cf54" name="Changes" comment="m1">
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/04ce443d4ae27e162f7ae96417b3223e/.filecache" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/flutter_build/04ce443d4ae27e162f7ae96417b3223e/.filecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/04ce443d4ae27e162f7ae96417b3223e/app.dill" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/flutter_build/04ce443d4ae27e162f7ae96417b3223e/app.dill" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/04ce443d4ae27e162f7ae96417b3223e/link_hooks_result.json" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/flutter_build/04ce443d4ae27e162f7ae96417b3223e/link_hooks_result.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.dart_tool/flutter_build/04ce443d4ae27e162f7ae96417b3223e/main.dart.js" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/flutter_build/04ce443d4ae27e162f7ae96417b3223e/main.dart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/web/assets/fonts/MaterialIcons-Regular.otf" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/assets/fonts/MaterialIcons-Regular.otf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/web/flutter_bootstrap.js" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/flutter_bootstrap.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/web/main.dart.js" beforeDir="false" afterPath="$PROJECT_DIR$/build/web/main.dart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/home_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/session_form.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/session_form.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/services/config.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/services/config.dart" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

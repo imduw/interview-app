@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart' as conn;
 import 'package:flutter/material.dart';
 import 'models/interview_session.dart';
 import 'screens/home_screen.dart';
@@ -66,6 +67,15 @@ class _MyAppState extends State<MyApp> {
         _sessions.add(result);
       });
       await _save();
+      if (!hasAppsScriptEndpoint) {
+        _showMessage('Đã lưu trên thiết bị. Cấu hình URL Apps Script để đồng bộ lên Google Sheets.');
+        return;
+      }
+      final connectivity = await _connectivityService.check();
+      if (connectivity == conn.ConnectivityResult.none) {
+        _showMessage('Mất kết nối Internet. Phiên đã được lưu offline và chờ đồng bộ.');
+        return;
+      }
       _attemptSyncFor(result);
     }
   }
@@ -81,6 +91,15 @@ class _MyAppState extends State<MyApp> {
           _sessions[idx] = result;
         });
         await _save();
+        if (!hasAppsScriptEndpoint) {
+          _showMessage('Đã lưu trên thiết bị. Cấu hình URL Apps Script để đồng bộ lên Google Sheets.');
+          return;
+        }
+        final connectivity = await _connectivityService.check();
+        if (connectivity == conn.ConnectivityResult.none) {
+          _showMessage('Mất kết nối Internet. Phiên đã được lưu offline và chờ đồng bộ.');
+          return;
+        }
         _attemptSyncFor(result);
       }
     }
@@ -100,8 +119,21 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _attemptSyncFor(InterviewSession s) async {
-    if (kAppsScriptEndpoint.contains('<YOUR')) return; // no endpoint configured
+    if (!hasAppsScriptEndpoint) {
+      _showMessage('Chưa cấu hình URL Google Apps Script. Dữ liệu đã lưu offline trên thiết bị.');
+      return;
+    }
     if (s.syncStatus == SyncStatus.synced) return;
+
+    final connectivity = await _connectivityService.check();
+    if (connectivity == conn.ConnectivityResult.none) {
+      setState(() {
+        s.syncStatus = SyncStatus.pending;
+      });
+      await _save();
+      _showMessage('Mất kết nối Internet. Đã giữ phiên ở trạng thái chờ đồng bộ.');
+      return;
+    }
 
     final ok = await _syncService.syncSession(s);
     if (ok) {
@@ -115,12 +147,17 @@ class _MyAppState extends State<MyApp> {
         s.syncStatus = SyncStatus.failed;
       });
       await _save();
-      _showMessage('Đồng bộ thất bại: ${s.sessionName}');
+      _showMessage('Đồng bộ thất bại: ${s.sessionName}. Sẽ thử lại khi có mạng.');
     }
   }
 
   Future<void> _attemptSyncPending() async {
-    if (kAppsScriptEndpoint.contains('<YOUR')) return; // no endpoint configured
+    if (!hasAppsScriptEndpoint) return;
+    final connectivity = await _connectivityService.check();
+    if (connectivity == conn.ConnectivityResult.none) {
+      _showMessage('Mạng hiện đang offline. Các phiên chưa đồng bộ sẽ tự sync khi có kết nối.');
+      return;
+    }
     for (final s in List<InterviewSession>.from(_sessions)) {
       if (s.syncStatus != SyncStatus.synced) {
         await _attemptSyncFor(s);
